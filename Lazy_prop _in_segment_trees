@@ -1,0 +1,63 @@
+class segment_tree{
+  public:
+    vector<int> seg,val,lazy;
+    segment_tree(int n){
+       val.resize(n);
+       seg.resize(4*n+1);
+       lazy.resize(4*n+1);
+
+    }
+    void build(int ind,int low,int high){
+       if(low==high){
+         seg[ind]=val[low];
+         return;
+    }
+    int mid =(low+high)/2;
+    build(2*ind+1,low,mid);
+    build(2*ind+2,mid+1,high);
+
+    seg[ind]=seg[2*ind+1]+seg[2*ind+2];
+    }
+    void update(int ind,int low,int high,int l,int r,int value){
+       if(lazy[ind]!=0){
+        seg[ind]+=(high-low+1)*lazy[ind];
+        if(low!=high){
+            lazy[2*ind+1]+=lazy[ind];
+            lazy[2*ind+1]+=lazy[ind];
+        }
+        lazy[ind]=0;
+       }
+       if(r<low||high<l)return;
+       if(low>=l&&high<=r){
+          seg[ind]+=(high-low+1)*value;
+          if(low!=high){
+            lazy[2*ind+1]+=value;
+            lazy[2*ind+2]+=value;
+          }
+          return;
+       }
+    int mid=(low+high)/2;
+    update(2*ind+1,low,mid,l,r,value);
+    update(2*ind+2,mid+1,high,l,r,value);
+
+    seg[ind]=seg[2*ind+1]+seg[2*ind+2];
+    }
+    int query(int ind,int low,int high,int l,int r){
+        if(lazy[ind]!=0){
+        seg[ind]+=(high-low+1)*lazy[ind];
+        if(low!=high){
+            lazy[2*ind+1]+=lazy[ind];
+            lazy[2*ind+1]+=lazy[ind];
+        }
+        lazy[ind]=0;
+       }
+        if(high<l ||r<low)return 0;
+        if(l<=low&&high<=r)seg[ind];
+
+        int mid=(mid+low)/2;
+        int left=query(2*ind+1,low,mid,l,r);
+        int right=query(2*ind+2,mid+1,high,l,r);
+
+        return  left+right;
+    }   
+};
