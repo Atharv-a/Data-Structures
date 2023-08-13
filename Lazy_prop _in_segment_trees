@@ -52,7 +52,7 @@ class segment_tree{
         lazy[ind]=0;
        }
         if(high<l ||r<low)return 0;
-        if(l<=low&&high<=r)seg[ind];
+        if(l<=low&&high<=r)return seg[ind];
 
         int mid=(mid+low)/2;
         int left=query(2*ind+1,low,mid,l,r);
